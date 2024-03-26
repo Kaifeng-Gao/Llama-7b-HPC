@@ -8,20 +8,22 @@
 
 ### HPC Environment
 
-1. Move to the compute node by requesting an interactive session for 6 hours: `salloc -t 6:00:00`
+1. Move to the compute node by requesting an interactive session for 6 hours: `salloc -t 2:00:00 -G 1 --partition gpu_devel`
 2. Load Miniconda module: `module load miniconda`
-3. Create an environment for Llama: `conda create --name llama python=3.11`
+3. Create an environment for Llama: `conda create --name llama python=3.10`
 4. Activate `llama` conda environment: `conda activate llama`
-5. Install Hugging Face dependencies: 
+5. Install Pytorch: `conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia`
+6. Test cuda using python ``
+7. Install Hugging Face dependencies: 
    1. `conda install conda-forge::transformers` ([tutorial](https://huggingface.co/docs/transformers/installation)）
    2. `conda install -c huggingface -c conda-forge datasets` ([tutorial](https://huggingface.co/docs/datasets/installation))
    3. `conda install -c conda-forge accelerate` ([tutorial](conda install -c conda-forge accelerate))
    4. `conda install bitsandbytes`
-6. Install jupyter notebook for playing around `conda install jupyter`
-7. Update OOD
+8. Install jupyter notebook for playing around `conda install jupyter`
+9. Update OOD
    1. `module unload miniconda`
    2. `ycrc_conda_env.sh update`
-8. Exit the compute node to release the job: `exit`
+10. Exit the compute node to release the job: `exit`
 
 ### Model Download
 
@@ -53,22 +55,26 @@ snapshot_download(model_name, cache_dir="./Llama-2-7b-chat-hf", token=access_tok
 
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
+import torch
 
-config = AutoConfig.from_pretrained("/home/sds262_kg797/palmer_scratch/Llama-2-7b-chat-hf/config.json")
+config = AutoConfig.from_pretrained("/home/sds262_netid/palmer_scratch/Llama-2-7b-chat-hf/config.json") # Replace with own netid or other path for Llama model
 model_name = "meta-llama/Llama-2-7b-chat-hf"
-prompt = "Tell me about Yale"
-access_token = "xxx" #Replace with your own token
+access_token = "xxx" # Replace with own token
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f'Using device: {device}')
 
 
 model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", token=access_token)
 tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True, token=access_token)
-model_inputs = tokenizer(prompt, return_tensors="pt")
+prompt = "[INST] Tell me about Zhejiang University [/INST]"
 
+model_inputs = tokenizer(prompt, return_tensors="pt").to(device)
 output = model.generate(**model_inputs)
-
 print(tokenizer.decode(output[0], skip_special_tokens=True))
 ```
 
+## Fine-tune
 
+#todo
 
