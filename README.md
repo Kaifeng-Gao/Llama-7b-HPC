@@ -76,5 +76,16 @@ print(tokenizer.decode(output[0], skip_special_tokens=True))
 
 ## Fine-tune
 
-#todo
+1. Install dependencies for QLoRA finetuning, remember to `conda activate llama` before installing: `pip install trl peft`
+2. `conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia`
+
+
+
+
+
+`salloc -t 2:00:00 -G 1 --partition gpu_devel`
+
+`squeue --me`
+
+`ssh NODELIST`
 
