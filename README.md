@@ -29,19 +29,21 @@
 
 1. Apply for access to Llama 2 on [Meta](https://llama.meta.com/llama-downloads) with the same email address used to register Hugging Face
 2. Apply for access to Llama 2 model on Hugging Face https://huggingface.co/meta-llama/Llama-2-7b-chat-hf
-3. Create a new access token on Hugging Face
+3. Create a new access token on Hugging Face. Go to your profile -> settings -> API token -> New token
 4. Switch to `transfer` node for downloading files: `ssh transfer` (100x download speed than on the compute node)
 5. Activate the `llama` environment (Remember to load `miniconda` first): `conda activate llama`
 6. Navigate to `palmer_scratch` folder on HPC (Used to store large files)
 7. Use the following Python Script to download the model files (Other ways to download model can be found [here](https://huggingface.co/docs/transformers/installation))
+- Snapshot download (use snapshot id to identify the model path)
+   ```python
+   from huggingface_hub import snapshot_download
+   model_name = "meta-llama/Llama-2-7b-chat-hf"
+   access_token = "xxx" #Replace with your own token
 
-```python
-from huggingface_hub import snapshot_download
-model_name = "meta-llama/Llama-2-7b-chat-hf"
-access_token = "xxx" #Replace with your own token
+   snapshot_download(model_name, cache_dir="./Llama-2-7b-chat-hf", token=access_token)
+   # /home/sds262_<netid>/palmer_scratch/Llama-2-7b-chat-hf/models--meta-llama--Llama-2-7b-chat-hf/snapshots/92011f62d7604e261f748ec0cfe6329f31193e33 for me
+   ```
 
-snapshot_download(model_name, cache_dir="./Llama-2-7b-chat-hf", token=access_token)
-```
 
 ![CleanShot 2024-03-24 at 13.00.45@2x](README.assets/CleanShot 2024-03-24 at 13.00.45@2x.jpg)
 
@@ -52,13 +54,14 @@ snapshot_download(model_name, cache_dir="./Llama-2-7b-chat-hf", token=access_tok
 3. Select `llama` (The environment created earlier) from the environment setup dropdown menu
 4. Allocate at least 4 CPU each with 8 GiBs RAM
 5. Launch the jupyter notebook and open `inference.ipynb` for inference
-6. Alternatively, use following Python script for inference:
+6. Alternatively, use following Python script or inference_local.py for inference:
 
 ```python
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
 import torch
 
 config = AutoConfig.from_pretrained("/home/sds262_netid/palmer_scratch/Llama-2-7b-chat-hf/config.json") # Replace with own netid or other path for Llama model
+# Path may vary: 
 model_name = "meta-llama/Llama-2-7b-chat-hf"
 access_token = "xxx" # Replace with own token
 
