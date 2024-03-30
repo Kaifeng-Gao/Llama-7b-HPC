@@ -13,12 +13,12 @@
 3. Create an environment for Llama: `conda create --name llama python=3.10`
 4. Activate `llama` conda environment: `conda activate llama`
 5. Install Pytorch: `conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia`
-6. Test cuda using python ![](https://windypic.oss-cn-guangzhou.aliyuncs.com/image/CleanShot%202024-03-25%20at%2022.49.40@2x.jpg)
+6. Test CUDA using python ![CUDA Test](https://github.com/Kaifeng-Gao/Llama-7b-HPC/blob/main/README.assets/cuda_test.jpg)
 7. Install Hugging Face dependencies: 
    1. `conda install conda-forge::transformers` ([tutorial](https://huggingface.co/docs/transformers/installation)）
    2. `conda install -c huggingface -c conda-forge datasets` ([tutorial](https://huggingface.co/docs/datasets/installation))
    3. `conda install -c conda-forge accelerate` ([tutorial](conda install -c conda-forge accelerate))
-   4. `pip install bitsandbytes` (Using conda will cause mismatch in cuda version)
+   4. `pip install bitsandbytes` (Using conda will cause mismatch in CUDA version)
 8. Install jupyter notebook for playing around `conda install jupyter`
 9. Update OOD
    1. `module unload miniconda`
@@ -44,8 +44,7 @@
    # /home/sds262_<netid>/palmer_scratch/Llama-2-7b-chat-hf/models--meta-llama--Llama-2-7b-chat-hf/snapshots/92011f62d7604e261f748ec0cfe6329f31193e33 for me
    ```
 
-
-![CleanShot 2024-03-24 at 13.00.45@2x](README.assets/CleanShot 2024-03-24 at 13.00.45@2x.jpg)
+![Model downloading](https://github.com/Kaifeng-Gao/Llama-7b-HPC/blob/main/README.assets/model_download.jpg)
 
 ## Inference
 
