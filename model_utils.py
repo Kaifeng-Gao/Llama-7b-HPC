@@ -1,21 +1,20 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
 import torch
-import os
 import time
-from dotenv import load_dotenv
+# import os
+# from dotenv import load_dotenv
 
-# Retrieve the access token
-load_dotenv()
-access_token = os.getenv('ACCESS_TOKEN')
+# # Retrieve the access token
+# load_dotenv()
+# access_token = os.getenv('ACCESS_TOKEN')
 
 # Function to load model and tokenizer
 def load_model_and_tokenizer():
-    config = AutoConfig.from_pretrained("/home/sds262_kg797/palmer_scratch/Llama-2-7b-chat-hf/config.json")
-    model_name = "meta-llama/Llama-2-7b-chat-hf"
+    model_path = "/home/sds262_kg797/palmer_scratch/Llama-2-7b-chat-hf/models--meta-llama--Llama-2-7b-chat-hf/snapshots/92011f62d7604e261f748ec0cfe6329f31193e33"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     
-    model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", token=access_token)
-    tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True, token=access_token)
+    model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
+    tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
 
     return model, tokenizer, device
 
