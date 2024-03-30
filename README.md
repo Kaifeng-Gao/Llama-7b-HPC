@@ -34,15 +34,14 @@
 5. Activate the `llama` environment (Remember to load `miniconda` first): `conda activate llama`
 6. Navigate to `palmer_scratch` folder on HPC (Used to store large files)
 7. Use the following Python Script to download the model files (Other ways to download model can be found [here](https://huggingface.co/docs/transformers/installation))
-- Snapshot download (use snapshot id to identify the model path)
-   ```python
-   from huggingface_hub import snapshot_download
-   model_name = "meta-llama/Llama-2-7b-chat-hf"
-   access_token = "xxx" #Replace with your own token
+8. Snapshot download (the snapshot will be under the cache_dir with `models--<organization>--<model-name>/snapshots/<snapshot-id>`, for me, the full path is `/home/sds262_<netid>/palmer_scratch/Llama-2-7b-chat-hf/models--meta-llama--Llama-2-7b-chat-hf/snapshots/92011f62d7604e261f748ec0cfe6329f31193e33`)
+```python
+from huggingface_hub import snapshot_download
+model_name = "meta-llama/Llama-2-7b-chat-hf"
+access_token = "xxx" #Replace with your own token
 
-   snapshot_download(model_name, cache_dir="./Llama-2-7b-chat-hf", token=access_token)
-   # /home/sds262_<netid>/palmer_scratch/Llama-2-7b-chat-hf/models--meta-llama--Llama-2-7b-chat-hf/snapshots/92011f62d7604e261f748ec0cfe6329f31193e33 for me
-   ```
+snapshot_download(model_name, cache_dir="./Llama-2-7b-chat-hf", token=access_token)
+```
 
 ![Model downloading](https://github.com/Kaifeng-Gao/Llama-7b-HPC/blob/main/README.assets/model_download.jpg)
 
@@ -59,18 +58,20 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
 import torch
 
-config = AutoConfig.from_pretrained("/home/sds262_netid/palmer_scratch/Llama-2-7b-chat-hf/config.json") # Replace with own netid or other path for Llama model
-# Path may vary: 
-model_name = "meta-llama/Llama-2-7b-chat-hf"
-access_token = "xxx" # Replace with own token
+from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
+import torch
+
+# TODO: Replace model path with your own
+# The path should look like `models--<organization>--<model-name>/snapshots/<snapshot-id>` under the cache directory defined when downloading the model
+model_path = "/home/sds262_kg797/palmer_scratch/Llama-2-7b-chat-hf/models--meta-llama--Llama-2-7b-chat-hf/snapshots/92011f62d7604e261f748ec0cfe6329f31193e33"
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f'Using device: {device}')
 
 
-model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", token=access_token)
-tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True, token=access_token)
-prompt = "[INST] Tell me about Zhejiang University [/INST]"
+model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
+tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
+prompt = "[INST] Tell me about Yale University [/INST]"
 
 model_inputs = tokenizer(prompt, return_tensors="pt").to(device)
 output = model.generate(**model_inputs)
