@@ -1,6 +1,7 @@
 import streamlit as st
 import random
-import time
+
+from model_utils import load_model_and_tokenizer, generate_response, output_response
 
 # Randomly choose a greeting if not already chosen
 if "greeting" not in st.session_state:
@@ -19,12 +20,9 @@ if "greeting" not in st.session_state:
         "How's everything?"
     ])
 
-# Streamed response emulator
-def response_generator(response):
-    for word in response.split():
-        yield word + " "
-        time.sleep(0.02)
-
+# Load model and tokenizer once
+if "model" not in st.session_state:
+    st.session_state.model, st.session_state.tokenizer, st.session_state.device = load_model_and_tokenizer()
 
 st.title("K GOD Chatbot")
 
@@ -45,10 +43,10 @@ if prompt := st.chat_input(st.session_state.greeting):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    response = f"K GOD says: {prompt}"
+    response = generate_response(st.session_state.model, st.session_state.tokenizer, st.session_state.device, prompt)
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
-        response = st.write_stream(response_generator(response))
+        response = st.write_stream(output_response(response))
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
