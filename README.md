@@ -91,6 +91,24 @@ print(tokenizer.decode(output[0], skip_special_tokens=True))
    1. The example in the notebook is for the [sql-create-context](https://huggingface.co/datasets/b-mc2/sql-create-context) dataset on Hugging Face.
    2. If using other dataset, need to preprocess the dataset based on [this article](https://huggingface.co/blog/llama2#how-to-prompt-llama-2)
 
+## Interactive Chatbot Application 
+
+In addition to the deep learning models and HPC environment setup, this project includes an interactive chatbot application developed with Streamlit. The chatbot, named "K GOD Chatbot," uses the model we have fine-tuned to generate responses to user inputs.
+
+### Prerequisites
+
+Before running the "K GOD Chatbot" application, install Streamlit using pip:
+
+```bash
+pip install streamlit
+```
+
+### Running the Application
+
+```bash
+streamlit run chatbot.py
+```
+
 ## HPC Related Code
 
 `squeue --me`
