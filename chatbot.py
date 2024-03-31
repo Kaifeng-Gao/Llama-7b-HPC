@@ -1,54 +1,43 @@
-import streamlit as st
-import random
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+import time
 
-from model_utils import load_model_and_tokenizer, generate_prompt_from_history, generate_response, output_response
+class ChatBot:
+    def __init__(self, model_path):
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model, self.tokenizer = self.load_model_and_tokenizer(model_path)
+        
 
-# Randomly choose a greeting if not already chosen
-if "greeting" not in st.session_state:
-    st.session_state.greeting = random.choice([
-        "What's up?",
-        "How's it going?",
-        "What's on your mind?",
-        "How are you today?",
-        "Anything new with you?",
-        "How's your day going?",
-        "What can I do for you today?",
-        "How can I assist you right now?",
-        "Ask me anything!",
-        "Anything I can help with?",
-        "What are you up to?",
-        "How's everything?"
-    ])
+    def load_model_and_tokenizer(self, model_path):
+        model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
+        tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
 
-# Load model and tokenizer once
-if "model" not in st.session_state:
-    st.session_state.model, st.session_state.tokenizer, st.session_state.device = load_model_and_tokenizer()
+        return model, tokenizer
 
-st.title("K GOD Chatbot")
+    def generate_prompt_from_history(self, conversation_history):
+        history_prompt = ""
+        length = 0
+        for message in conversation_history:
+            if message["role"] == "user":
+                history_prompt += f"<s>[INST] {message['content']} [/INST]"
+                length += len(message['content']) + 16
+            elif message["role"] == "assistant":
+                history_prompt += f" {message['content']} </s>"
+                length += len(message['content']) + 2
 
-# Initialize chat history
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+        return history_prompt, length
 
-# Display chat messages from history on app rerun
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    def generate_response(self, conversation_history):
+        history_prompt, length = self.generate_prompt_from_history(conversation_history)
+        model_inputs = self.tokenizer(history_prompt, return_tensors="pt").to(self.device)
+        output = self.model.generate(**model_inputs)
+        output = self.tokenizer.decode(output[0], skip_special_tokens=True)
 
-# Accept user input
-if prompt := st.chat_input(st.session_state.greeting):
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    # Display user message in chat message container
-    with st.chat_message("user"):
-        st.markdown(prompt)
+        # Remove previous prompts
+        response = output[length:]
+        return response
 
-    # Build the prompt from the conversation history
-    history_prompt, length = generate_prompt_from_history(st.session_state.messages)
-    response = generate_response(st.session_state.model, st.session_state.tokenizer, st.session_state.device, history_prompt, length)
-
-    # Display assistant response in chat message container
-    with st.chat_message("assistant"):
-        response = st.write_stream(output_response(response))
-    # Add assistant response to chat history
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    def output_response(self, response):
+        for word in response.split():
+            yield word + " "
+            time.sleep(0.02)
