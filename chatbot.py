@@ -45,7 +45,7 @@ if prompt := st.chat_input(st.session_state.greeting):
 
     # Build the prompt from the conversation history
     history_prompt = generate_prompt_from_history(st.session_state.messages)
-    current_prompt = f"<s>[INST] {prompt} [/INST]"
+    current_prompt = f"[INST] {prompt} [/INST]"
     response = generate_response(st.session_state.model, st.session_state.tokenizer, st.session_state.device, history_prompt, current_prompt)
 
     # Display assistant response in chat message container
