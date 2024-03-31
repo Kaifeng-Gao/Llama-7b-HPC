@@ -169,7 +169,7 @@ In addition to the deep learning models and HPC environment setup, this project 
 Before running the "K GOD Chatbot" application, install Streamlit and other relevant packages using pip:
 
 ```bash
-pip install streamlit, python-dotenv
+pip install streamlit
 ```
 
 ### Running the Application

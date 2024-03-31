@@ -18,28 +18,28 @@ def load_model_and_tokenizer():
 
     return model, tokenizer, device
 
-# Function to generate prompt from conversation history
+# Function to generate current prompt from conversation history
 def generate_prompt_from_history(conversation_history):
-    prompt = ""
+    history_prompt = ""
+    length = 0
     for message in conversation_history:
         if message["role"] == "user":
-            prompt += f"<s>[INST] {message['content']} [/INST]"
+            history_prompt += f"<s>[INST] {message['content']} [/INST]"
+            length += len(message['content']) + 16
         elif message["role"] == "assistant":
-            prompt += f" {message['content']} </s>"
+            history_prompt += f" {message['content']} </s>"
+            length += len(message['content']) + 2
 
-    return prompt
+    return history_prompt, length
 
 # Function to generate response
-def generate_response(model, tokenizer, device, history_prompt, current_prompt):
+def generate_response(model, tokenizer, device, history_prompt, length):
     model_inputs = tokenizer(history_prompt, return_tensors="pt").to(device)
     output = model.generate(**model_inputs)
-    response = tokenizer.decode(output[0], skip_special_tokens=True)
+    output = tokenizer.decode(output[0], skip_special_tokens=True)
 
-    # Check if the output begins with the prompt and remove it if it does
-    if response.startswith(current_prompt):
-        response = response[len(current_prompt):].lstrip()  # Remove the prompt and any leading whitespace
-    else:
-        response = response
+    # Remove previous prompts
+    response = output[length:]
 
     return response
 
