@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 
-from model_utils import load_model_and_tokenizer, generate_response, output_response
+from model_utils import load_model_and_tokenizer, generate_prompt_from_history, generate_response, output_response
 
 # Randomly choose a greeting if not already chosen
 if "greeting" not in st.session_state:
@@ -43,7 +43,10 @@ if prompt := st.chat_input(st.session_state.greeting):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    response = generate_response(st.session_state.model, st.session_state.tokenizer, st.session_state.device, prompt)
+    # Build the prompt from the conversation history
+    history_prompt = generate_prompt_from_history(st.session_state.messages)
+    current_prompt = f"[INST] {prompt} [/INST]"
+    response = generate_response(st.session_state.model, st.session_state.tokenizer, st.session_state.device, history_prompt, current_prompt)
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
