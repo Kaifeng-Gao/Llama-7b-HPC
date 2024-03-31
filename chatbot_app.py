@@ -12,6 +12,10 @@ def load_configuration(config_file):
 config_file = 'config.yaml'  
 config = load_configuration(config_file)
 model_path = config['chatbot_model']['path']
+rag = config['chatbot_model']['rag']
+if rag:
+    from rag_chatbot import RagChatbot
+    document_list = config['documents']
 
 # Randomly choose a greeting if not already chosen
 if "greeting" not in st.session_state:
@@ -32,7 +36,11 @@ if "greeting" not in st.session_state:
 
 # Load chatbot
 if "chatbot" not in st.session_state:
-    st.session_state.chatbot = ChatBot(model_path)
+    if rag:
+        st.session_state.chatbot = RagChatbot(model_path, document_list)
+    else:
+        st.session_state.chatbot = ChatBot(model_path)
+    
 
 st.title("Llama 2 Chatbot")
 
