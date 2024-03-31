@@ -6,24 +6,92 @@
 
 ## Preparation
 
-### HPC Environment
+### Conda Setup Guide
 
-1. Move to the compute node by requesting an interactive session for 6 hours: `salloc -t 2:00:00 -G 1 --partition gpu_devel`
-2. Load Miniconda module: `module load miniconda`
-3. Create an environment for Llama: `conda create --name llama python=3.10`
-4. Activate `llama` conda environment: `conda activate llama`
-5. Install Pytorch: `conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia`
-6. Test CUDA using python ![CUDA Test](https://github.com/Kaifeng-Gao/Llama-7b-HPC/blob/main/README.assets/cuda_test.jpg)
-7. Install Hugging Face dependencies: 
-   1. `conda install conda-forge::transformers` ([tutorial](https://huggingface.co/docs/transformers/installation)）
-   2. `conda install -c huggingface -c conda-forge datasets` ([tutorial](https://huggingface.co/docs/datasets/installation))
-   3. `conda install -c conda-forge accelerate` ([tutorial](conda install -c conda-forge accelerate))
-   4. `pip install bitsandbytes` (Using conda will cause mismatch in CUDA version)
-8. Install jupyter notebook for playing around `conda install jupyter`
-9. Update OOD
-   1. `module unload miniconda`
-   2. `ycrc_conda_env.sh update`
-10. Exit the compute node to release the job: `exit`
+#### For Yale HPC Users
+
+Initiate an interactive session on Yale HPC to install the Conda environment by following these steps:
+
+1. Request an interactive session for 2 hours with GPU access: 
+   ```
+   salloc -t 2:00:00 -G 1 --partition gpu_devel
+   ```
+2. Load the Miniconda module: 
+   ```
+   module load miniconda
+   ```
+
+#### For Other Users
+
+Ensure Conda is installed on your system. Skip the HPC specific steps above.
+
+### Setting Up Conda Environment
+
+You can create and set up your Conda environment by either using the provided `environment.yml` file or by manually installing each necessary package.
+
+#### Using environment.yml (Recommended)
+
+Run the following command to create the environment from the `environment.yml` file:
+
+```
+conda env create -f environment.yml
+```
+
+#### Manual Installation
+
+If the above method does not work for you, follow these steps to manually install your environment and dependencies:
+
+1. **Create and Activate Environment**
+   ```
+   conda create --name llama python=3.10
+   conda activate llama
+   ```
+
+2. **Install PyTorch with CUDA Support**
+   ```
+   conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+   ```
+
+3. **Test CUDA (Optional)**
+
+   Run the CUDA test Python script found [here](https://github.com/Kaifeng-Gao/Llama-7b-HPC/blob/main/README.assets/cuda_test.jpg).
+
+4. **Install Hugging Face Libraries**
+
+   - Transformers: `conda install conda-forge::transformers`
+   - Datasets: `conda install -c huggingface -c conda-forge datasets`
+   - Accelerate: `conda install -c conda-forge accelerate`
+   - bitsandbytes (for efficient CUDA operations): `pip install bitsandbytes`
+
+5. **Install Jupyter Notebook**
+
+   ```
+   conda install jupyter
+   ```
+
+6. **Install Additional Dependencies (Optional)**
+   - For QLoRA finetuning: `pip install trl peft`
+   - For Streamlit applications: `pip install streamlit python-dotenv`
+   - For Retrieval Augmented Implementation: `pip install langchain sentence-transformers beautifulsoup4 faiss-gpu`
+
+### Finalizing Setup on Yale HPC
+
+If you are working on Yale HPC, follow these steps to finalize the setup:
+
+1. Unload the Miniconda module:
+   ```
+   module unload miniconda
+   ```
+
+2. Update the OOD (Out-Of-Date) Conda Environment:
+   ```
+   ycrc_conda_env.sh update
+   ```
+
+3. Release the compute node by exiting the session:
+   ```
+   exit
+   ```
 
 ### Model Download
 
