@@ -36,11 +36,12 @@ def generate_prompt_from_history(conversation_history):
 def generate_response(model, tokenizer, device, history_prompt, length):
     model_inputs = tokenizer(history_prompt, return_tensors="pt").to(device)
     output = model.generate(**model_inputs)
-    response = tokenizer.decode(output[0], skip_special_tokens=True)
+    output = tokenizer.decode(output[0], skip_special_tokens=True)
 
     # Remove previous prompts
+    response = output[length:]
 
-    return response[length:]
+    return response
 
 # Streamed response emulator
 def output_response(response):
