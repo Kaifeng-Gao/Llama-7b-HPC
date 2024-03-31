@@ -30,14 +30,14 @@ def generate_prompt_from_history(conversation_history):
     return prompt
 
 # Function to generate response
-def generate_response(model, tokenizer, device, user_input):
-    model_inputs = tokenizer(user_input, return_tensors="pt").to(device)
+def generate_response(model, tokenizer, device, history_prompt, current_prompt):
+    model_inputs = tokenizer(history_prompt, return_tensors="pt").to(device)
     output = model.generate(**model_inputs)
     response = tokenizer.decode(output[0], skip_special_tokens=True)
 
     # Check if the output begins with the prompt and remove it if it does
-    if response.startswith(user_input):
-        response = response[len(user_input):].lstrip()  # Remove the prompt and any leading whitespace
+    if response.startswith(current_prompt):
+        response = response[len(current_prompt):].lstrip()  # Remove the prompt and any leading whitespace
     else:
         response = response
 
