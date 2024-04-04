@@ -160,26 +160,28 @@ print(tokenizer.decode(output[0], skip_special_tokens=True))
    1. The example in the notebook is for the [sql-create-context](https://huggingface.co/datasets/b-mc2/sql-create-context) dataset on Hugging Face.
    2. If using other dataset, need to preprocess the dataset based on [this article](https://huggingface.co/blog/llama2#how-to-prompt-llama-2)
 
-## Interactive Chatbot Application 
+## Llama2 Chatbot
 
-In addition to the deep learning models and HPC environment setup, this project includes an interactive chatbot application developed with Streamlit. The chatbot, named "K GOD Chatbot," uses the model we have fine-tuned to generate responses to user inputs.
+The Llama2 Chatbot is an interactive web application powered by Streamlit, designed to engage users in a conversational interface. It leverages a powerful model to understand and respond to user queries based on a dynamic retrieval of information.
 
 ### Prerequisites
 
-Before running the "K GOD Chatbot" application, install Streamlit and other relevant packages using pip:
+Before launching the Llama2 Chatbot, it is essential to ensure that your environment is properly set up. Please follow the steps in Additional Dependencies (Optional) to install the necessary Dependencies for Streamlit Apps.
 
-```bash
-pip install streamlit
-```
+### Configuration
+
+To customize the behaviour of the Llama2 Chatbot, certain configurations can be modified in the `config.yaml` file. These include:
+
+- `model_path`: Specifies the path to the model weights.
+- `rag`: A boolean indicator (`True` or `False`) to decide whether to use the Retrieval Augmented Generation model. This setting enhances the chatbot's response quality by integrating retrieved documents into its generation process.
+- `documents`: Defines a list of websites from which the model can dynamically acquire information to inform its responses. This will only work when `rag` is set to `True`.
+
+Make sure to adjust these configurations based on your setup and requirements.
 
 ### Running the Application
 
+With the prerequisites in place and configurations set, the Llama2 Chatbot application can be launched as follows:
+
 ```bash
-streamlit run chatbot.py
+streamlit run chatbot_app.py
 ```
-
-## HPC Related Code
-
-`squeue --me`
-
-`ssh NODELIST`
