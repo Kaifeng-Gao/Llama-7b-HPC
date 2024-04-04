@@ -1,7 +1,9 @@
 import streamlit as st
 import random
-from chatbot import ChatBot
 import yaml
+
+from app.chatbot import ChatBot
+
 
 # Load config from config.yaml
 def load_configuration(config_file):
@@ -14,7 +16,7 @@ config = load_configuration(config_file)
 model_path = config['chatbot_model']['model_path']
 rag = config['chatbot_model']['rag']
 if rag:
-    from rag_chatbot import RagChatbot
+    from app.rag_chatbot import RagChatbot
     document_list = config['documents']
 
 # Randomly choose a greeting if not already chosen

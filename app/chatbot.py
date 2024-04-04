@@ -2,6 +2,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import time
 
+
 class ChatBot:
     def __init__(self, model_path):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
