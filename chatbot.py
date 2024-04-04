@@ -38,6 +38,13 @@ class ChatBot:
         return response
 
     def output_response(self, response):
-        for word in response.split():
-            yield word + " "
-            time.sleep(0.02)
+        lines = response.split('\n')
+        for line in lines:
+            words = line.split(' ')  # Split line into words, keeping spaces in mind
+            for word in words[:-1]:  # Yield all but the last word with a trailing space
+                yield word + " "  
+                time.sleep(0.02)
+            if words:  # Check if the line was not empty
+                yield words[-1]  # Yield the last word without adding an extra space
+                time.sleep(0.02)
+            yield '\n'  # At the end of a line, yield a newline character

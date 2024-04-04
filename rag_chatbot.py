@@ -24,16 +24,15 @@ class RagChatbot(ChatBot):
         documents = text_splitter.split_documents(docs)
         embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-mpnet-base-v2')
         vector = FAISS.from_documents(documents, embeddings)
-        retriever = vector.as_retriever()
+        retriever = vector.as_retriever(search_kwargs={"k": 1})
         return retriever
 
     def init_rag_chain(self):
         prompt_template = \
         """
-        [INST] Instruction: Answer the question based on the information provided, if relevant. Otherwise, use general knowledge to answer the question.
+        [INST] <<SYS>> Use context provided to answer the question below, explicitly state what part of your response is retrieved from context and what part is based on general knowledge <</SYS>>
         CONTEXT:
         {context}
-
         QUESTION:
         {question} [/INST]
         """
@@ -51,7 +50,7 @@ class RagChatbot(ChatBot):
             temperature=0.2,
             repetition_penalty=1.1,
             return_full_text=False,
-            max_new_tokens=300,
+            max_new_tokens=500,
         )
 
         llama_llm = HuggingFacePipeline(pipeline=text_generation_pipeline)
