@@ -30,8 +30,8 @@ class RagChatbot(ChatBot):
     def init_rag_chain(self):
         prompt_template = \
         """
-        [INST] Instruction: Answer the question based on the following information/context:
-        
+        [INST] Instruction: Answer the question based on the information provided, if relevant. Otherwise, use general knowledge to answer the question.
+        CONTEXT:
         {context}
 
         QUESTION:
