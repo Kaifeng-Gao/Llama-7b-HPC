@@ -7,7 +7,8 @@ def template_a(sample):
         instruction = f"With the given context '{sample['context']}', how would you write SQL to retrieve data: {sample['question']}"
     else:
         instruction = f"How would you write SQL to answer: {sample['question']}"
-    return f"{prefix} {instruction} [/INST] {sample['answer']}"
+    sql_markdown = f"```sql\n{sample['answer']}\n```"
+    return f"{prefix} {instruction} [/INST] {sql_markdown}"
 
 def template_b(sample):
     prefix = "<s>[INST]"
@@ -15,7 +16,8 @@ def template_b(sample):
         instruction = f"How can the question '{sample['question']}' be answered using SQL, considering the context: '{sample['context']}'"
     else:
         instruction = f"How can the question '{sample['question']}' be answered using SQL"
-    return f"{prefix} {instruction} [/INST] {sample['answer']}"
+    sql_markdown = f"```sql\n{sample['answer']}\n```"
+    return f"{prefix} {instruction} [/INST] {sql_markdown}"
 
 def template_c(sample):
     prefix = "<s>[INST]"
@@ -23,7 +25,8 @@ def template_c(sample):
         instruction = f"Dataset overview: '{sample['context']}'. Please demonstrate how SQL can be used to address the question: '{sample['question']}'"
     else:
         instruction = f"Please demonstrate how SQL can be used to address the question: '{sample['question']}'."
-    return f"{prefix} {instruction} [/INST] {sample['answer']}"
+    sql_markdown = f"```sql\n{sample['answer']}\n```"
+    return f"{prefix} {instruction} [/INST] {sql_markdown}"
 
 def template_d(sample):
     prefix = "<s>[INST]"
@@ -31,7 +34,8 @@ def template_d(sample):
         instruction = f"Let's collaborate on writing an SQL query to solve for '{sample['question']}' within this context: '{sample['context']}'. How should we approach it"
     else:
         instruction = f"Let's collaborate on writing an SQL query to solve for '{sample['question']}'. How should we approach it?"
-    return f"{prefix} {instruction} [/INST] {sample['answer']}"
+    sql_markdown = f"```sql\n{sample['answer']}\n```"
+    return f"{prefix} {instruction} [/INST] {sql_markdown}"
 
 def template_e(sample):
     prefix = "<s>[INST]"
@@ -39,7 +43,8 @@ def template_e(sample):
         instruction = f"As part of our data analysis with the background '{sample['context']}', could you formulate an SQL query to address the inquiry: '{sample['question']}'"
     else:
         instruction = f"Could you formulate an SQL query to address the inquiry: '{sample['question']}'"
-    return f"{prefix} {instruction} [/INST] {sample['answer']}"
+    sql_markdown = f"```sql\n{sample['answer']}\n```"
+    return f"{prefix} {instruction} [/INST] {sql_markdown}"
 
 def template_e(sample):
     prefix = "<s>[INST]"
@@ -47,7 +52,8 @@ def template_e(sample):
         instruction = f"You've been tasked with finding information related to :'{sample['question']}', under this context: '{sample['context']}'"
     else:
         instruction = f"You've been tasked with finding information related to :'{sample['question']}'"
-    return f"{prefix} {instruction} [/INST] {sample['answer']}"
+    sql_markdown = f"```sql\n{sample['answer']}\n```"
+    return f"{prefix} {instruction} [/INST] {sql_markdown}"
 
 
 # Function to randomly select a template and format the sample
