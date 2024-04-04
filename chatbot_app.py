@@ -11,7 +11,7 @@ def load_configuration(config_file):
 
 config_file = 'config.yaml'  
 config = load_configuration(config_file)
-model_path = config['chatbot_model']['path']
+model_path = config['chatbot_model']['model_path']
 rag = config['chatbot_model']['rag']
 if rag:
     from rag_chatbot import RagChatbot
