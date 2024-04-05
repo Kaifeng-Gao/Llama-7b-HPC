@@ -12,8 +12,8 @@ from langchain.chains import LLMChain
 
 
 class RagChatbot(ChatBot):
-    def __init__(self, model_path, document_list):
-        super().__init__(model_path)
+    def __init__(self, model_path, new_model_path = None, document_list = []):
+        super().__init__(model_path, new_model_path)
         self.retriever = self.load_docs(document_list)
         self.rag_chain = self.init_rag_chain()
     
@@ -64,6 +64,8 @@ class RagChatbot(ChatBot):
         
     def generate_response(self, conversation_history):
         history_prompt, length = super().generate_prompt_from_history(conversation_history)
+        print(history_prompt)
         output = self.rag_chain.invoke(history_prompt)
+        print(output)
         response = output['text']
         return response
