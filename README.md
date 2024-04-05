@@ -105,7 +105,7 @@ If you are working on Yale HPC, follow these steps to finalize the setup:
    ```
 
 
-## Model Download
+## Base Model Download
 
 1. Apply for access to Llama 2 on [Meta](https://llama.meta.com/llama-downloads) with the same email address used to register Hugging Face
 2. Apply for access to Llama 2 model on Hugging Face https://huggingface.co/meta-llama/Llama-2-7b-chat-hf
@@ -125,6 +125,10 @@ If you are working on Yale HPC, follow these steps to finalize the setup:
    - the snapshot will be under the cache_dir with `models--<organization>--<model-name>/snapshots/<snapshot-id>`
    - for me, the full path is `/home/sds262_<netid>/palmer_scratch/Llama-2-7b-chat-hf/models--meta-llama--Llama-2-7b-chat-hf/snapshots/92011f62d7604e261f748ec0cfe6329f31193e33`)
 9. Set the full snapshot path in [Default Configuration](#default-configuration)
+
+## Fine-tuned Model Download
+
+#todo
 
 # Configuration Guide
 
@@ -178,9 +182,69 @@ rag_config:
   ]
 ```
 
+## Finetuning Configuration
+The `model_config` section contains the model used in fine-tuning
+ - **<<: *default**: This line inherits configurations from [Default](#default-configuration)
+  - **access_token**: The `access_token` is essential for accessing datasets used for fine-tuning on Hugging Face's platform.
+  - **new_model**: This path `"./models/llama-2-7b-sql"` indicates where the fine-tuned model will be saved locally after the fine-tuning process is completed.
+  - **dataset_name**: Indicates the name of the dataset that will be used for fine-tuning. Here, we use [b-mc2/sql-create-context](https://huggingface.co/datasets/b-mc2/sql-create-context) from hugging face as an example
+```yaml
+model_config: 
+  <<: *default
+  access_token: <your token>
+  model_name: "meta-llama/Llama-2-7b-chat-hf"
+  new_model: "./results/llama-2-7b-sql"
+  dataset_name: "b-mc2/sql-create-context"
+```
 
-## Inference
+Detailed explanation for `q_lora_parameters`, `bitsandbytes_parameters`, `training_arguments` and `sft_parameters` can be found [here](https://colab.research.google.com/drive/1PEQyJO1-f6j0S_XJ8DV50NkpzasXkrzd?usp=sharing).
 
+# Fine-tune
+#todo
+1. Modify configurations based on [Configuration Guide](#finetuning-configuration)
+2. If using other dataset: also need to update `finetune_utils.dataset_converter` to construct instructions for fine-tuning. The template for prompting Llama can be found [here](https://huggingface.co/blog/llama2#how-to-prompt-llama-2)
+3. For HPC users, use batch job to run the fine-tuning script
+   ```bash
+   sbatch run_finetune.sh
+   ```
+4. For other users, run the python script for fine-tuning
+   ```bash
+   python finetune.py
+   ```
+
+
+# Llama2 Chatbot
+
+The Llama2 Chatbot is an interactive web application powered by Streamlit, designed to engage users in a conversational interface. It leverages a powerful model to understand and respond to user queries based on a dynamic retrieval of information. A full documentation can be found [here](app_utils/app.md).
+
+## Prerequisites
+
+Before launching the Llama2 Chatbot, it is essential to ensure that your environment is properly set up. Please follow the steps in [Additional Dependency](#setting-up-conda-environment) to install the necessary Dependencies for Streamlit Apps.
+
+## Configuration
+
+To customize the behaviour of the Llama2 Chatbot, certain configurations can be modified in the `config.yaml` file, detailed information can be found in [Configuration Guide](#configuration-guide).
+Make sure to adjust these configurations based on your setup and requirements.
+
+## Running the Application
+### For HPC users
+If you are an HPC user, here's how to get started:
+
+- Allocate a Remote Desktop with GPU Support: To ensure the Llama2 Chatbot application runs smoothly, use the HPC Open OnDemand service to allocate a remote desktop that supports GPUs ([settings](<README.assets/open_on_demand.jpg>)) (Make sure to select a desktop instance within the `gpu-devel` partition) 
+- It's important to note that the model running within the Llama2 Chatbot requires approximately 30GB of GPU memory. Therefore, double-check that the allocated GPU has sufficient capacity by `nvidia-smi`. In some cases, the GPU might not be powerful enough to handle the model efficiently. In this case, delete the connection and allocate again.
+
+### For other users
+- Ensure Your System Has a GPU and a Web Browser: The primary requirement is a GPU with a significant amount of memory, ideally around 30GB, to effectively run the Llama2 Chatbot. 
+- Verify that your machine is equipped with such a GPU and that you have access to a web browser for interacting with the application's interface.
+
+With the [prerequisites](#prerequisites) in place and [configurations](#configuration) set, the Llama2 Chatbot application can be launched as follows:
+
+```bash
+streamlit run chatbot_app.py
+```
+
+# Inference
+#deprecated
 1. Clone this repo into `project` folder in HPC
 2. Open jupyter from [HPC Dashboard](https://sds262.ycrc.yale.edu/pun/sys/dashboard)
 3. Select `llama` (The environment created earlier) from the environment setup dropdown menu
@@ -210,48 +274,4 @@ prompt = "[INST] Tell me about Yale University [/INST]"
 model_inputs = tokenizer(prompt, return_tensors="pt").to(device)
 output = model.generate(**model_inputs)
 print(tokenizer.decode(output[0], skip_special_tokens=True))
-```
-
-## Fine-tune
-
-1. Ensure you have cloned this repo into `project` folder in HPC
-2. Install dependencies for QLoRA finetuning, remember to `conda activate llama` before installing: `pip install trl peft`
-3. Update OOD
-   1. `module unload miniconda`
-   2. `ycrc_conda_env.sh update`
-4. Select jupyter from [HPC Dashboard](https://sds262.ycrc.yale.edu/pun/sys/dashboard)
-5. Select `llama` (The environment created earlier) from the environment setup dropdown menu
-6. Allocate at least 1 GPU (Sometimes the RAM may not be sufficient, it depends on the GPU you get)
-7. Connect jupyter notebook and open `finetune.ipynb` for finetuning. 
-   1. The example in the notebook is for the [sql-create-context](https://huggingface.co/datasets/b-mc2/sql-create-context) dataset on Hugging Face.
-   2. If using other dataset, need to preprocess the dataset based on [this article](https://huggingface.co/blog/llama2#how-to-prompt-llama-2)
-
-## Llama2 Chatbot
-
-The Llama2 Chatbot is an interactive web application powered by Streamlit, designed to engage users in a conversational interface. It leverages a powerful model to understand and respond to user queries based on a dynamic retrieval of information. A full documentation can be found [here](app_utils/app.md).
-
-### Prerequisites
-
-Before launching the Llama2 Chatbot, it is essential to ensure that your environment is properly set up. Please follow the steps in [Additional Dependency](#setting-up-conda-environment) to install the necessary Dependencies for Streamlit Apps.
-
-### Configuration
-
-To customize the behaviour of the Llama2 Chatbot, certain configurations can be modified in the `config.yaml` file, detailed information can be found in [Configuration Guide](#configuration-guide).
-Make sure to adjust these configurations based on your setup and requirements.
-
-### Running the Application
-#### For HPC users
-If you are an HPC user, here's how to get started:
-
-- Allocate a Remote Desktop with GPU Support: To ensure the Llama2 Chatbot application runs smoothly, use the HPC Open OnDemand service to allocate a remote desktop that supports GPUs ([settings](<README.assets/open_on_demand.jpg>)) (Make sure to select a desktop instance within the `gpu-devel` partition) 
-- It's important to note that the model running within the Llama2 Chatbot requires approximately 30GB of GPU memory. Therefore, double-check that the allocated GPU has sufficient capacity by `nvidia-smi`. In some cases, the GPU might not be powerful enough to handle the model efficiently. In this case, delete the connection and allocate again.
-
-#### For other users
-- Ensure Your System Has a GPU and a Web Browser: The primary requirement is a GPU with a significant amount of memory, ideally around 30GB, to effectively run the Llama2 Chatbot. 
-- Verify that your machine is equipped with such a GPU and that you have access to a web browser for interacting with the application's interface.
-
-With the [prerequisites](#prerequisites) in place and [configurations](#configuration) set, the Llama2 Chatbot application can be launched as follows:
-
-```bash
-streamlit run chatbot_app.py
 ```

@@ -7,7 +7,7 @@ chatbot_model:
   <<: *default
   rag: True
   finetune: False
-  finetune_model_path: "./results/llama-2-7b-sql"
+  finetune_model_path: "./models/llama-2-7b-sql"
 
 # RAG Configuration
 rag_config:
@@ -24,7 +24,6 @@ rag_config:
 model_config: 
   <<: *default
   access_token: "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"
-  model_name: "meta-llama/Llama-2-7b-chat-hf"
   new_model: "./results/llama-2-7b-sql"
   dataset_name: "b-mc2/sql-create-context"
 

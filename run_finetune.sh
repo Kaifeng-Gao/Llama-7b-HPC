@@ -8,6 +8,6 @@
 
 module purge
 module load miniconda
-conda activate Llama
+conda activate llama
 
-python fine_tune.py
+python finetune.py
