@@ -54,6 +54,14 @@ if "chatbot" not in st.session_state:
 def clear_history():
     st.session_state.messages = []
 
+st.markdown("""
+<style>
+div.stButton > button {
+    margin-top: 30px;
+}
+</style>
+""", unsafe_allow_html=True)
+
 col1, col2 = st.columns([8, 2]) 
 
 with col1:
