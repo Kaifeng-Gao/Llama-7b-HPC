@@ -9,7 +9,7 @@ from langchain.schema.runnable import RunnablePassthrough
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 
-from app.chatbot import ChatBot
+from app_utils.chatbot import ChatBot
 
 
 class RagChatbot(ChatBot):
