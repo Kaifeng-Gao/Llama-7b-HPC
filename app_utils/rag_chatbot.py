@@ -64,7 +64,7 @@ class RagChatbot(ChatBot):
         return rag_chain
         
     def generate_response(self, conversation_history):
-        history_prompt, length = super().generate_prompt_from_history(conversation_history)
+        history_prompt, _ = super().generate_prompt_from_history(conversation_history)
         output = self.rag_chain.invoke(history_prompt)
         response = output['text']
         return response

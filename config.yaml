@@ -5,9 +5,9 @@ default: &default
 # Chatbot Configuration
 chatbot_model:
   <<: *default
-  rag: True
+  rag: False
   finetune: False
-  finetune_model_path: "./models/llama-2-7b-sql"
+  finetune_model_path: "./models/Llama-2-7b-sql"
 
 # RAG Configuration
 rag_config:

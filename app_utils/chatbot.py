@@ -1,4 +1,5 @@
 import torch
+import transformers
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import LoraConfig, PeftModel
 import time
@@ -11,6 +12,7 @@ class ChatBot:
             self.model, self.tokenizer = self.load_peft_model_and_tokenizer(model_path, new_model_path)
         else:
             self.model, self.tokenizer = self.load_base_model_and_tokenizer(model_path)
+        self.text_generation_pipe = self.init_chain()
 
     @staticmethod
     def get_device():
@@ -32,7 +34,19 @@ class ChatBot:
         tokenizer.pad_token = tokenizer.eos_token
         tokenizer.padding_side = "right"
         return model, tokenizer
-
+    
+    def init_chain(self):
+        text_generation_pipeline = transformers.pipeline(
+            model=self.model,
+            tokenizer=self.tokenizer,
+            task="text-generation",
+            temperature=0.8,
+            repetition_penalty=1.1,
+            return_full_text=False,
+            max_new_tokens=500,
+        ) 
+        return text_generation_pipeline
+    
     def generate_prompt_from_history(self, conversation_history):
         history_prompt = ""
         length = 0
@@ -48,13 +62,16 @@ class ChatBot:
 
     def generate_response(self, conversation_history):
         history_prompt, length = self.generate_prompt_from_history(conversation_history)
-        model_inputs = self.tokenizer(history_prompt, return_tensors="pt").to(self.device)
-        output = self.model.generate(**model_inputs)
-        output = self.tokenizer.decode(output[0], skip_special_tokens=True)
+        # model_inputs = self.tokenizer(history_prompt, return_tensors="pt").to(self.device)
+        # output = self.model.generate(**model_inputs)
+        # output = self.tokenizer.decode(output[0], skip_special_tokens=True)
+        print(history_prompt)
+        response = self.text_generation_pipe(history_prompt)
 
         # Remove previous prompts
-        response = output[length:]
-        return response
+        # response = output[length:]
+        print(response)
+        return response[0]['generated_text']
 
     def output_response(self, response):
         lines = response.split('\n')

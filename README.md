@@ -1,13 +1,20 @@
 # Llama-7b-HPC
 
-[Llama 2](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf)
-
 # Demo
 ![alt text](<README.assets/CleanShot 2024-04-04 at 21.43.57@2x.jpg>)
 
+# TOC
+- [Preparation](#preparation)
+- [Configuration Guide](#configuration-guide)
+- [Llama2 Chatbot](#llama2-chatbot)
+- [Inference](#inference)
+- [Fine-tune](#fine-tune)
+- [Reference](#reference)
+
 # Quick Start
-1. To run the Llama Chatbot, first go through the [Preparation](#preparation), then jump to [Llama 2 Chatbot](#llama2-chatbot)
-2. To use 
+1. To run the Llama Chatbot, first go through the [Preparation](#preparation), then jump to [Llama 2 Chatbot](#llama2-chatbot).
+2. To fine-tune your own model, first go through the [Preparation](#preparation), then follow the guide in [Fine-tune](#fine-tune).
+3. For command line quick inference, go through [Preparation](#preparation) and then jump to [Inference](#inference).
 
 # Preparation
 
@@ -199,19 +206,6 @@ model_config:
 
 Detailed explanation for `q_lora_parameters`, `bitsandbytes_parameters`, `training_arguments` and `sft_parameters` can be found [here](https://colab.research.google.com/drive/1PEQyJO1-f6j0S_XJ8DV50NkpzasXkrzd?usp=sharing).
 
-# Fine-tune
-#todo
-1. Modify configurations based on [Configuration Guide](#finetuning-configuration)
-2. If using other dataset: also need to update `finetune_utils.dataset_converter` to construct instructions for fine-tuning. The template for prompting Llama can be found [here](https://huggingface.co/blog/llama2#how-to-prompt-llama-2)
-3. For HPC users, use batch job to run the fine-tuning script
-   ```bash
-   sbatch run_finetune.sh
-   ```
-4. For other users, run the python script for fine-tuning
-   ```bash
-   python finetune.py
-   ```
-
 
 # Llama2 Chatbot
 
@@ -223,7 +217,7 @@ Before launching the Llama2 Chatbot, it is essential to ensure that your environ
 
 ## Configuration
 
-To customize the behaviour of the Llama2 Chatbot, certain configurations can be modified in the `config.yaml` file, detailed information can be found in [Configuration Guide](#configuration-guide).
+To customize the behaviour of the Llama2 Chatbot, certain configurations can be modified in the `config.yaml` file, detailed information can be found in [Configuration Guide](#chatbot-model-configuration).
 Make sure to adjust these configurations based on your setup and requirements.
 
 ## Running the Application
@@ -231,7 +225,8 @@ Make sure to adjust these configurations based on your setup and requirements.
 If you are an HPC user, here's how to get started:
 
 - Allocate a Remote Desktop with GPU Support: To ensure the Llama2 Chatbot application runs smoothly, use the HPC Open OnDemand service to allocate a remote desktop that supports GPUs ([settings](<README.assets/open_on_demand.jpg>)) (Make sure to select a desktop instance within the `gpu-devel` partition) 
-- It's important to note that the model running within the Llama2 Chatbot requires approximately 30GB of GPU memory. Therefore, double-check that the allocated GPU has sufficient capacity by `nvidia-smi`. In some cases, the GPU might not be powerful enough to handle the model efficiently. In this case, delete the connection and allocate again.
+- It's *IMPORTANT* to note that the model running within the Llama2 Chatbot requires approximately 30GB of GPU memory. Therefore, double-check that the allocated GPU has sufficient capacity by `nvidia-smi`. In some cases, the GPU might not be powerful enough to handle the model efficiently. In this case, delete the connection and allocate again.
+   - An alternative approach is to use xQuartz as graphical interface instead ([tutorial](https://docs.ycrc.yale.edu/clusters-at-yale/access/x11/)), this way, the gpu type can be designated in job allocation like this `--gpus a100:1`
 
 ### For other users
 - Ensure Your System Has a GPU and a Web Browser: The primary requirement is a GPU with a significant amount of memory, ideally around 30GB, to effectively run the Llama2 Chatbot. 
@@ -244,34 +239,41 @@ streamlit run chatbot_app.py
 ```
 
 # Inference
-#deprecated
-1. Clone this repo into `project` folder in HPC
-2. Open jupyter from [HPC Dashboard](https://sds262.ycrc.yale.edu/pun/sys/dashboard)
-3. Select `llama` (The environment created earlier) from the environment setup dropdown menu
-4. Allocate at least 4 CPU each with 8 GiBs RAM
-5. Launch the jupyter notebook and open `inference.ipynb` for inference
-6. Alternatively, use following Python script or inference_local.py for inference:
+For Web-based inference, turn to [Chatbot](#llama2-chatbot).
 
-```python
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
-import torch
+For command line quick inference:
 
-from transformers import AutoModelForCausalLM, AutoTokenizer, AutoConfig
-import torch
+1. Modify the `model_path` in `config.yaml` based on [Configuration Guide](#default-configuration)
+2. Activate the conda environment
+3. Run the script `python inference.py "your prompt"`
 
-# TODO: Replace model path with your own
-# The path should look like `models--<organization>--<model-name>/snapshots/<snapshot-id>` under the cache directory defined when downloading the model
-model_path = "/home/sds262_kg797/palmer_scratch/Llama-2-7b-chat-hf/models--meta-llama--Llama-2-7b-chat-hf/snapshots/92011f62d7604e261f748ec0cfe6329f31193e33"
+```bash
+(Llama)[sds262_kg797@r805u30n01.grace Llama-7b-HPC]$ python inference.py "Tell me about Yale"
+Using device: cuda
+Loading checkpoint shards: 100%
+[INST] Tell me about Yale [/INST]  Yale University is a private Ivy League research university located in New Haven, Connecticut, United States. It was founded in 1701 and is one of the oldest institutions of higher learning in the United States. Yale is known for its academic excellence, cultural influence, and historic prestige.
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f'Using device: {device}')
+Here are some key facts about Yale:
 
-
-model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
-tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
-prompt = "[INST] Tell me about Yale University [/INST]"
-
-model_inputs = tokenizer(prompt, return_tensors="pt").to(device)
-output = model.generate(**model_inputs)
-print(tokenizer.decode(output[0], skip_special_tokens=True))
+1. History: Yale was founded in 1701 as the Collegiate School, and it was renamed Yale College in 1718 in recognition of a gift from Elihu Yale, a British merchant and early benefactor of the institution.
+...
 ```
+
+# Fine-tune
+1. Modify configurations based on [Configuration Guide](#finetuning-configuration)
+2. If using other dataset: also need to update `finetune_utils.dataset_converter` to construct instructions for fine-tuning. The template for prompting Llama can be found [here](https://huggingface.co/blog/llama2#how-to-prompt-llama-2)
+3. For HPC users, use batch job to run the fine-tuning script
+   ```bash
+   sbatch run_finetune.sh
+   ```
+4. For other users, run the python script for fine-tuning
+   ```bash
+   python finetune.py
+   ```
+
+
+# Reference
+1. [Llama2](https://huggingface.co/docs/transformers/model_doc/llama2) 
+2. [Build your own RAG with Mistral-7B and LangChain | by Madhav Thaker | Medium](https://medium.com/@thakermadhav/build-your-own-rag-with-mistral-7b-and-langchain-97d0c92fa146)
+3. [Build a basic LLM chat app - Streamlit Docs](https://docs.streamlit.io/knowledge-base/tutorials/build-conversational-apps)
+4. [Fine-tune the “Llama-v2-7b-guanaco” model with 4-bit QLoRA and generate Q&A datasets from PDFs](https://colab.research.google.com/drive/134o_cXcMe_lsvl15ZE_4Y75Kstepsntu?usp=sharing)
