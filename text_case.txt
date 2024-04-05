@@ -1,0 +1,23 @@
+A company's executives are interested in seeing who earns the most money in each of the
+company's departments. A high earner in a department is an employee who has a salary in the
+top three unique salaries for that department.
+
+The dataset is created by "Create table If Not Exists Employee (id int, name varchar(255), salary
+int, departmentld int) Create table If Not Exists Department (id int, name varchar(255))" Write a
+solution to find the employees who are high earners in each of the departments.
+
+Return the result table in any order.
+
+
+Here is the dataset overview: Create table If Not Exists Employee (id int, name varchar(255), salary
+int, departmentld int) Create table If Not Exists Department (id int, name varchar(255)). 
+Provide SQL that answer: A company's executives are interested in seeing who earns the most money in each of the
+company's departments. A high earner in a department is an employee who has a salary in the
+top three unique salaries for that department.Write a solution to find the employees who are high earners in each of the departments.
+
+SELECT T1.id, T1.name, T2.department FROM Employee AS T1 JOIN Department AS T2 ON T1.department = T2.id WHERE T1.salary IN (SELECT T1.salary FROM Employee AS T1 WHERE T1.department = T2.id ORDER BY T1.salary LIMIT 3) GROUP BY T2.department ORDER BY COUNT(*) DESC LIMIT 1 OFFSET 0
+
+SELECT e.name, d.name, e.salary, d.salary_range
+FROM Employee e
+JOIN Department d ON e.department_id = d.id
+WHERE e.salary IN (SELECT top 3 salary FROM Employee WHERE department_id = d.id);
