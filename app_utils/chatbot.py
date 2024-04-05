@@ -25,8 +25,8 @@ class ChatBot:
 
     def load_peft_model_and_tokenizer(self, model_path, new_model_path):
         """Loads a PEFT model from the given path and merges it with the base model."""
-        model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
-        model = PeftModel.from_pretrained(self.model, new_model_path)
+        base_model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
+        model = PeftModel.from_pretrained(base_model, new_model_path)
         model = model.merge_and_unload()
         tokenizer = AutoTokenizer.from_pretrained(model_path)
         tokenizer.pad_token = tokenizer.eos_token
