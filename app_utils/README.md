@@ -12,6 +12,7 @@ The Llama 2 Chatbot is an interactive web application powered by Streamlit. It u
 The user interface is clean and simple, built with Streamlit. It features:
 
 - A title at the top of the page.
+- A "Clear History" button positioned next to the title, allowing users to reset the conversation at any time.
 - A dynamically chosen greeting message that prompts user input.
 - An area where the conversation history is displayed, showing messages from both the user and the chatbot.
 - A text input field where the user can type their messages.
@@ -39,15 +40,17 @@ This is the main file that orchestrates the web application:
 - It loads the configuration from a YAML file, which specifies the model to use and the documents list if in RAG mode.
 - Initializes the appropriate chatbot class (either ChatBot or RagChatbot) based on the configuration.
 - Manages the session state to maintain the conversation history and handle user interactions.
+- Integrates a "Clear History" button that, when clicked, will clear the chat history and refresh the conversation flow.
 - Displays the conversation and manages the input and output flow of the chatbot interaction.
 
 ## Interaction Flow
 
 1. When a user visits the application, they are greeted with a random greeting message.
-2. The user enters their message into the input field.
-3. The app adds the user's message to the conversation history and passes it to the chatbot.
-4. The chatbot generates a response, which is then displayed to the user.
-5. The response is added to the conversation history and the cycle continues with each new message.
+2. The user has the option to clear the chat history at any point by using the "Clear History" button, which resets the conversation.
+3. The user enters their message into the input field.
+4. The app adds the user's message to the conversation history and passes it to the chatbot.
+5. The chatbot generates a response, which is then displayed to the user.
+6. The response is added to the conversation history and the cycle continues with each new message.
 
 ## Configurable Options
 The application can be configured to work in two modes:
