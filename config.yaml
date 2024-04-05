@@ -1,22 +1,29 @@
-model_default: &default
+# Default Configuration
+default: &default
   model_path: "/home/sds262_yc958/palmer_scratch/Llama-2-7b-chat-hf/models--meta-llama--Llama-2-7b-chat-hf/snapshots/92011f62d7604e261f748ec0cfe6329f31193e33"
+
+# Chatbot Configuration
 chatbot_model:
   <<: *default
   rag: True
+  finetune: False
+  finetune_model_path: "./models/llama-2-7b-sql"
 
-documents: [
-  "https://dev.mysql.com/doc/refman/8.0/en/select.html",
-  "https://dev.mysql.com/doc/refman/8.0/en/update.html",
-  "https://dev.mysql.com/doc/refman/8.0/en/table.html",
-  "https://dev.mysql.com/doc/refman/8.0/en/union.html",
-  "https://dev.mysql.com/doc/refman/8.0/en/values.html",
-  "https://dev.mysql.com/doc/refman/8.0/en/delete.html",
-]
+# RAG Configuration
+rag_config:
+  documents: [
+    "https://dev.mysql.com/doc/refman/8.0/en/select.html",
+    "https://dev.mysql.com/doc/refman/8.0/en/update.html",
+    "https://dev.mysql.com/doc/refman/8.0/en/table.html",
+    "https://dev.mysql.com/doc/refman/8.0/en/union.html",
+    "https://dev.mysql.com/doc/refman/8.0/en/values.html",
+    "https://dev.mysql.com/doc/refman/8.0/en/delete.html",
+  ]
 
+# Finetuning Configuration
 model_config: 
   <<: *default
   access_token: "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"
-  model_name: "meta-llama/Llama-2-7b-chat-hf"
   new_model: "./results/llama-2-7b-sql"
   dataset_name: "b-mc2/sql-create-context"
 

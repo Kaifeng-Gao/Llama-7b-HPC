@@ -9,12 +9,12 @@ from langchain.schema.runnable import RunnablePassthrough
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 
-from app.chatbot import ChatBot
+from app_utils.chatbot import ChatBot
 
 
 class RagChatbot(ChatBot):
-    def __init__(self, model_path, document_list):
-        super().__init__(model_path)
+    def __init__(self, model_path, new_model_path = None, document_list = []):
+        super().__init__(model_path, new_model_path)
         self.retriever = self.load_docs(document_list)
         self.rag_chain = self.init_rag_chain()
     

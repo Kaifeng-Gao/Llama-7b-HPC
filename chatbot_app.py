@@ -1,9 +1,8 @@
 import streamlit as st
 import random
+from app_utils.chatbot import ChatBot
+from app_utils.rag_chatbot import RagChatbot
 import yaml
-
-from app.chatbot import ChatBot
-
 
 # Load config from config.yaml
 def load_configuration(config_file):
@@ -15,9 +14,17 @@ config_file = 'config.yaml'
 config = load_configuration(config_file)
 model_path = config['chatbot_model']['model_path']
 rag = config['chatbot_model']['rag']
+finetune = config['chatbot_model']['finetune']
+
+# load document list for RAG model
 if rag:
-    from app.rag_chatbot import RagChatbot
-    document_list = config['documents']
+    document_list = config['rag_config']['documents']
+
+# load new_model_path if using finetuned model
+if finetune:
+    new_model_path = config['chatbot_model']['finetune_model_path']
+else:
+    new_model_path = None
 
 # Randomly choose a greeting if not already chosen
 if "greeting" not in st.session_state:
@@ -39,9 +46,9 @@ if "greeting" not in st.session_state:
 # Load chatbot
 if "chatbot" not in st.session_state:
     if rag:
-        st.session_state.chatbot = RagChatbot(model_path, document_list)
+        st.session_state.chatbot = RagChatbot(model_path, new_model_path, document_list)
     else:
-        st.session_state.chatbot = ChatBot(model_path)
+        st.session_state.chatbot = ChatBot(model_path, new_model_path)
     
 
 st.title("Llama 2 Chatbot")

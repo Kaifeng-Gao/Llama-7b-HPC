@@ -1,4 +1,4 @@
-name: Llama
+name: llama
 channels:
   - pytorch
   - huggingface

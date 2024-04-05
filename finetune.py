@@ -1,7 +1,7 @@
 import yaml
 import torch
 from datasets import load_dataset
-from dataset_converter import template_dataset
+from finetune_utils.dataset_converter import template_dataset
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,

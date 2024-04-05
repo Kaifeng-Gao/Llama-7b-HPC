@@ -1,19 +1,32 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import LoraConfig, PeftModel
 import time
 
 
 class ChatBot:
-    def __init__(self, model_path):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model, self.tokenizer = self.load_model_and_tokenizer(model_path)
-        
+    def __init__(self, model_path, new_model_path = None):
+        self.device = self.get_device()
+        self.model, self.tokenizer = self.load_base_model_and_tokenizer(model_path)
+        if new_model_path:
+            self.model = self.load_peft_model(new_model_path)
 
-    def load_model_and_tokenizer(self, model_path):
+    @staticmethod
+    def get_device():
+        """Returns the device to be used by PyTorch (either CUDA or CPU)."""
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    def load_base_model_and_tokenizer(self, model_path):
+        """Loads the base transformer model and tokenizer from the given path."""
         model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
         tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
-
         return model, tokenizer
+
+    def load_peft_model(self, new_model_path):
+        """Loads a PEFT model from the given path and merges it with the base model."""
+        model = PeftModel.from_pretrained(self.model, new_model_path)
+        model = model.merge_and_unload()
+        return model
 
     def generate_prompt_from_history(self, conversation_history):
         history_prompt = ""
