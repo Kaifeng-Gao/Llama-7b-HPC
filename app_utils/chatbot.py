@@ -7,9 +7,10 @@ import time
 class ChatBot:
     def __init__(self, model_path, new_model_path = None):
         self.device = self.get_device()
-        self.model, self.tokenizer = self.load_base_model_and_tokenizer(model_path)
         if new_model_path:
-            self.model = self.load_peft_model(new_model_path)
+            self.model, self.tokenizer = self.load_peft_model_and_tokenizer(model_path, new_model_path)
+        else:
+            self.model, self.tokenizer = self.load_base_model_and_tokenizer(model_path)
 
     @staticmethod
     def get_device():
@@ -22,11 +23,15 @@ class ChatBot:
         tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
         return model, tokenizer
 
-    def load_peft_model(self, new_model_path):
+    def load_peft_model(self, model_path, new_model_path):
         """Loads a PEFT model from the given path and merges it with the base model."""
+        model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
         model = PeftModel.from_pretrained(self.model, new_model_path)
         model = model.merge_and_unload()
-        return model
+        tokenizer = AutoTokenizer.from_pretrained(model_path)
+        tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.padding_side = "right"
+        return model, tokenizer
 
     def generate_prompt_from_history(self, conversation_history):
         history_prompt = ""
