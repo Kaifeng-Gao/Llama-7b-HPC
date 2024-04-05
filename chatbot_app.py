@@ -50,8 +50,18 @@ if "chatbot" not in st.session_state:
     else:
         st.session_state.chatbot = ChatBot(model_path, new_model_path)
     
+# Function to clear chat history
+def clear_history():
+    st.session_state.messages = []
 
-st.title("Llama 2 Chatbot")
+col1, col2 = st.columns([8, 2]) 
+
+with col1:
+    st.title("Llama 2 Chatbot")
+
+with col2:
+    if st.button('Clear History'):
+        clear_history()
 
 # Initialize chat history
 if "messages" not in st.session_state:
