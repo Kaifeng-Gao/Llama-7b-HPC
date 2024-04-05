@@ -1,4 +1,3 @@
-from chatbot import ChatBot
 import transformers
 from langchain.llms import HuggingFacePipeline
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
@@ -9,6 +8,8 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
+
+from app.chatbot import ChatBot
 
 
 class RagChatbot(ChatBot):

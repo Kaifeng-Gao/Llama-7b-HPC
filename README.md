@@ -71,7 +71,7 @@ If the above method does not work for you, follow these steps to manually instal
 
 6. **Install Additional Dependencies (Optional)**
    - For QLoRA finetuning: `pip install trl peft`
-   - For Streamlit applications: `pip install streamlit python-dotenv`
+   - For Streamlit applications: `pip install streamlit`
    - For Retrieval Augmented Implementation: `pip install langchain sentence-transformers beautifulsoup4 faiss-gpu`
 
 ### Finalizing Setup on Yale HPC

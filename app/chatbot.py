@@ -3,6 +3,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import LoraConfig, PeftModel
 import time
 
+
 class ChatBot:
     def __init__(self, model_path, new_model_path = None):
         self.device = self.get_device()
