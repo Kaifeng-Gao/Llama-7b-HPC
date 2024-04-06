@@ -1,7 +1,15 @@
 # Llama-7b-HPC
 
 # Demo
-![alt text](<README.assets/CleanShot 2024-04-04 at 21.43.57@2x.jpg>)
+![Llama 2 Chatbot](<demo/Llama 2 Chatbot.jpg>)
+---
+🔍 Retrieval Augmented: Wave goodbye to endless searches! Our system delivers quick access to HTML document lists, making information retrieval a breeze.
+
+🌐 Interactive Web App: Dive into an immersive experience with our web application powered by Streamlit. Enjoy chatting with beautiful Markdown formatting.
+
+🤖 Fine-tuned Model: Elevate your SQL programming with our fine-tuned model, versatile and open to embracing other models for an unmatched experience.
+
+📘 Yale HPC Guide: Your gateway to mastery! Full documentation at your fingertips for reproduction on Yale High-Performance Computing.
 
 # TOC
 - [Preparation](#preparation)
