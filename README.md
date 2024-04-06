@@ -143,7 +143,17 @@ If you are working on Yale HPC, follow these steps to finalize the setup:
 
 ## Fine-tuned Model Download
 
-#todo
+   ```python
+   from huggingface_hub import hf_hub_download
+   import joblib
+   
+   REPO_ID = "Tommy0303000"
+   FILENAME = "Llama-2-7b-sql.joblib"
+   
+   model = joblib.load(
+       hf_hub_download(repo_id=REPO_ID, filename=FILENAME)
+   )
+   ```
 
 # Configuration Guide
 
