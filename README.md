@@ -1,7 +1,7 @@
 # Llama Chatbot (Yale HPC)
 
 # Demo
-![Llama 2 Chatbot](<demo/Llama 2 Chatbot.jpg>)
+![Llama 2 Chatbot](<demos/Llama 2 Chatbot.jpg>)
 ---
 🔍 Retrieval Augmented: Wave goodbye to endless searches! Our system delivers quick access to HTML document lists, making information retrieval a breeze.
 
