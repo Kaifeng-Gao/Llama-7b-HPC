@@ -144,7 +144,7 @@ If you are working on Yale HPC, follow these steps to finalize the setup:
 ## Fine-tuned Model Download
 
 1. Download the fine-tuned model from [Google Drive](https://drive.google.com/drive/folders/1Ecwuyi4hDanGvvkSlOUgvCH-ULjkojC1?usp=sharing).
-2. Modify its path according to the [Finetuning Configuration Guide](#finetuning-configuration-guide) in this README. Ensure the `new_model` is in the correct directory as specified.
+2. Modify its path according to the [Finetuning Configuration](#finetuning-configuration). Ensure the `new_model` is in the correct directory as specified.
 
 # Configuration Guide
 
