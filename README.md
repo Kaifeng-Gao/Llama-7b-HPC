@@ -168,8 +168,8 @@ The `chatbot_model` configuration specifies additional settings for the chatbot 
 - **rag**: This setting enables the Retrieval-Augmented Generation feature, which allows the model to use external documents to generate responses.
 - **finetune**: Indicates whether fine-tuned model is enabled. If `False`, the model will use its base training without any additional fine-tuning.
 - **finetune_model_path**: Specifies the path where the fine-tuned model would be located if fine-tuning was enabled. This setting is not used in this example as fine-tuning is disabled. 
-   - Fine-tuned model can be downloaded from #todo
-   - Follow the [Fine-tuning](#fine-tune) guide to finetune your own model #todo
+   - Fine-tuned model can be downloaded follow the guide [here](#fine-tuned-model-download)
+   - Follow the [Fine-tuning](#fine-tune) guide to finetune your own model
 
 ```yaml
 chatbot_model:
