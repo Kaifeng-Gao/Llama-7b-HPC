@@ -216,7 +216,7 @@ Detailed explanation for `q_lora_parameters`, `bitsandbytes_parameters`, `traini
 
 Dataset after preprocessing using multiple templates can be found [here](https://huggingface.co/Tommy0303000/Llama-2-7b-sql).
 
-Fine tuned model can be found [here]([https://huggingface.co/Tommy0303000/Llama-2-7b-sql](https://huggingface.co/datasets/Tommy0303000/preprocessed-sql-create-context).
+Fine tuned model can be found [here](https://huggingface.co/datasets/Tommy0303000/preprocessed-sql-create-context).
 
 # Llama2 Chatbot
 
