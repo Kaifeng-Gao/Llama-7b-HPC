@@ -1,4 +1,4 @@
-# Llama-7b-HPC
+# Llama Chatbot (Yale HPC)
 
 # Demo
 ![Llama 2 Chatbot](<demo/Llama 2 Chatbot.jpg>)
