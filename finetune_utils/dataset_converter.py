@@ -66,3 +66,5 @@ def format_sample_randomly(sample):
 def template_dataset(sample, tokenizer):
     sample['text'] = f"{format_sample_randomly(sample)}\n{tokenizer.eos_token}"
     return sample
+
+
