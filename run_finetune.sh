@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=sql
+#SBATCH --job-name=spider
 #SBATCH --time=8:00:00
 #SBATCH --partition=gpu
 #SBATCH --mail-type=ALL
@@ -8,6 +8,6 @@
 
 module purge
 module load miniconda
-conda activate llama
+conda activate Llama
 
-python finetune.py
+python finetune_spider.py
