@@ -32,6 +32,7 @@ config = AutoConfig.from_pretrained(model_cfg['model_path'])
 tokenizer = AutoTokenizer.from_pretrained(model_cfg['model_path'], use_fast=True, token=model_cfg['access_token'])
 dataset = load_dataset(model_cfg['dataset_name'], split="train")
 dataset_llama = dataset.map(template_dataset, fn_kwargs={'tokenizer': tokenizer}, remove_columns=list(dataset.features))
+print("Transformed dataset sample", dataset_llama[0])
 
 
 # Set BitsAndBytes configuration
