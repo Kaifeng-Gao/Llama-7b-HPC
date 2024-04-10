@@ -46,7 +46,7 @@ def template_e(sample):
     sql_markdown = f"```sql\n{sample['answer']}\n```"
     return f"{prefix} {instruction} [/INST] \n{sql_markdown}"
 
-def template_e(sample):
+def template_f(sample):
     prefix = "<s>[INST]"
     if sample['context']:
         instruction = f"You've been tasked with finding information related to :'{sample['question']}', under this context: '{sample['context']}'"
@@ -58,7 +58,7 @@ def template_e(sample):
 
 # Function to randomly select a template and format the sample
 def format_sample_randomly(sample):
-    templates = [template_a, template_b, template_c, template_d, template_e]
+    templates = [template_a, template_b, template_c, template_d, template_e, template_f]
     chosen_template = random.choice(templates)
     return chosen_template(sample)
 
