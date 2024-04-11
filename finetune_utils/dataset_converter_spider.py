@@ -3,6 +3,7 @@ import sqlparse
 
 
 TEMPLATES = [
+    # Without Schema
     "[INST] How would you write SQL to retrieve data: {question} [/INST] \n```sql\n{query}\n```",
     "[INST] How would you write SQL to answer: {question} [/INST] \n```sql\n{query}\n```",
     "[INST] How can the question '{question}' be answered using SQL [/INST] \n```sql\n{query}\n```",
@@ -21,6 +22,7 @@ TEMPLATES = [
     "[INST] How do you formulate an SQL query to address the problem described here: '{question}'? [/INST] \n```sql\n{query}\n```",
     "[INST] Given the database task, '{question}', construct the appropriate SQL command.[/INST] \n```sql\n{query}\n```",
     "[INST] Construct a SQL script to fetch data as per the question: {question} [/INST] \n```sql\n{query}\n```",
+    # With Schema
     "[INST] {question} Given the schema:\n```sql\n{schema}\n```\nWhat SQL query would you write to address this? [/INST] \n```sql\n{query}\n```",
     "[INST] Examine the SQL query:\n```sql\n{query}\n```\nWhat question does this query aim to answer, assuming the following database schema? \n```sql\n{schema}\n``` [/INST] The query solves the question: {question}",
     "[INST] To tackle the problem '{question}', formulate an appropriate SQL query using the provided schema:\n```sql\n{schema}\n``` [/INST] \n```sql\n{query}\n```",
