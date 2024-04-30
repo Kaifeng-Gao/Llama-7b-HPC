@@ -9,9 +9,9 @@ class ChatBot:
     def __init__(self, model_path, new_model_path = None):
         self.device = self.get_device()
         if new_model_path:
-            self.model, self.tokenizer = self.load_peft_model_and_tokenizer(model_path, new_model_path)
+            self.model, self.tokenizer = self.load_model_and_tokenizer(new_model_path)
         else:
-            self.model, self.tokenizer = self.load_base_model_and_tokenizer(model_path)
+            self.model, self.tokenizer = self.load_model_and_tokenizer(model_path)
         self.text_generation_pipe = self.init_chain()
 
     @staticmethod
@@ -19,20 +19,10 @@ class ChatBot:
         """Returns the device to be used by PyTorch (either CUDA or CPU)."""
         return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    def load_base_model_and_tokenizer(self, model_path):
+    def load_model_and_tokenizer(self, model_path):
         """Loads the base transformer model and tokenizer from the given path."""
         model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
         tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=True)
-        return model, tokenizer
-
-    def load_peft_model_and_tokenizer(self, model_path, new_model_path):
-        """Loads a PEFT model from the given path and merges it with the base model."""
-        base_model = AutoModelForCausalLM.from_pretrained(model_path, device_map="auto")
-        model = PeftModel.from_pretrained(base_model, new_model_path)
-        model = model.merge_and_unload()
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
-        tokenizer.pad_token = tokenizer.eos_token
-        tokenizer.padding_side = "right"
         return model, tokenizer
     
     def init_chain(self):

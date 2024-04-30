@@ -7,7 +7,7 @@ chatbot_model:
   <<: *default
   rag: False
   finetune: True
-  finetune_model_path: "./results/llama-2-7b-spider"
+  finetune_model_path: "./results/Llama-2-7b-spider"
 
 # RAG Configuration
 rag_config:
