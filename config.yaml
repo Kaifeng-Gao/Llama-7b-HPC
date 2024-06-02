@@ -6,8 +6,8 @@ default: &default
 chatbot_model:
   <<: *default
   rag: False
-  finetune: False
-  finetune_model_path: "./models/Llama-2-7b-sql"
+  finetune: True
+  finetune_model_path: "./results/Llama-2-7b-spider"
 
 # RAG Configuration
 rag_config:
@@ -24,8 +24,8 @@ rag_config:
 model_config: 
   <<: *default
   access_token: "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"
-  new_model: "./results/llama-2-7b-sql"
-  dataset_name: "b-mc2/sql-create-context"
+  new_model: "./results/llama-2-7b-spider"
+  dataset_name: "KaifengGGG/spider_sql_schema"
 
 q_lora_parameters:
   lora_r: 64

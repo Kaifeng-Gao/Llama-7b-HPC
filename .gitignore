@@ -160,6 +160,6 @@ cython_debug/
 #.idea/
 models/
 results/
-.out
+*.out
 Movie/
-
+*.ipynb
